@@ -84,6 +84,4 @@ SELECT
   REPLACE(capital, name, '') AS extension
 FROM world
 WHERE
-  capital LIKE CONCAT(name, '_%')
-  AND capital LIKE '%-%'
-  AND capital NOT LIKE '%city'
+  capital LIKE CONCAT(name, '_%');
