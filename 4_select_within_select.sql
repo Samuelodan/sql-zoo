@@ -84,9 +84,51 @@ WHERE
   area >= ALL
   (SELECT area
   FROM world AS w_y
-  WHERE w_x.continent = w_y.continent
-  AND area > 0)
+  WHERE
+    w_x.continent = w_y.continent
+    AND area > 0);
 
 /* 8. List each continent and the name of the country that comes first
       alphabetically. */
+SELECT
+  continent,
+  name
+FROM world AS w_x
+WHERE
+  name =
+  (SELECT name
+   FROM world AS w_y
+   WHERE w_x.continent = w_y.continent
+   ORDER BY name
+   LIMIT 1);
 
+/* 9. Find the continents where all countries have a population <= 25000000.
+      Then find the names of the countries associated with these continents. Show
+      name, continent and population. */
+SELECT
+  name,
+  continent,
+  population
+FROM world AS w_x
+WHERE
+  25000000 >= ALL
+  (SELECT population
+   FROM world AS w_y
+   WHERE
+     w_x.continent = w_y.continent
+     AND population > 0);
+
+/* 10. Some countries have populations more than three times that of all of
+       their neighbours (in the same continent). Give the countries and continents. */
+SELECT
+  name,
+  continent
+FROM world AS w_x
+WHERE
+  population > ALL
+  (SELECT population * 3
+   FROM world AS w_y
+   WHERE
+     w_x.continent = w_y.continent
+     AND population > 0
+     AND w_x.name <> w_y.name);
