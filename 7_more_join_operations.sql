@@ -94,3 +94,81 @@ WHERE
   movie.yr = 1962
   AND casting.ord = 1;
 
+/* 11. Which were the busiest years for 'Rock Hudson', show the year and the
+       number of movies he made each year for any year in which he made more than 2
+       movies. */
+SELECT
+  movie.yr,
+  COUNT(title) AS movie_count
+FROM movie
+INNER JOIN casting
+  ON movie.id = casting.movieid
+INNER JOIN actor
+  ON casting.actorid = actor.id
+WHERE actor.name LIKE 'rock hudson'
+GROUP BY yr
+HAVING movie_count > 2;
+
+/* 12. List the film title and the leading actor for all of the films 'Julie
+       Andrews' played in. */
+SELECT
+  movie.title,
+  actor.name
+FROM movie
+INNER JOIN casting
+  ON movie.id = casting.movieid
+INNER JOIN actor
+  ON casting.actorid = actor.id
+WHERE
+  casting.ord = 1
+  AND movie.id IN(
+    SELECT movie.id
+    FROM movie
+    INNER JOIN casting
+      ON movie.id = casting.movieid
+    INNER JOIN actor
+      ON casting.actorid = actor.id
+    WHERE actor.name LIKE 'julie andrews'
+  );
+
+/* 13. Obtain a list, in alphabetical order, of actors who've had at least 15
+       starring roles. */
+SELECT actor.name
+FROM actor
+INNER JOIN casting
+  ON actor.id = casting.actorid
+WHERE casting.ord = 1
+GROUP BY actor.name
+HAVING COUNT(*) >= 15;
+
+/* 14. List the films released in the year 1978 ordered by the number of actors
+       in the cast, then by title. */
+SELECT
+  movie.title,
+  COUNT(casting.actorid) AS cast_number
+FROM movie
+INNER JOIN casting
+  ON movie.id = casting.movieid
+WHERE movie.yr = 1978
+GROUP BY movie.title
+ORDER BY
+  COUNT(casting.actorid) DESC,
+  movie.title
+
+-- 15. List all the people who have worked with 'Art Garfunkel'.
+SELECT DISTINCT actor.name
+FROM actor
+INNER JOIN casting
+  ON actor.id = casting.actorid
+WHERE
+  actor.name <> 'art garfunkel'
+  AND casting.movieid IN(
+    SELECT
+      movie.id
+    FROM movie
+    INNER JOIN casting
+      ON movie.id = casting.movieid
+    INNER JOIN actor
+      ON casting.actorid = actor.id
+    WHERE actor.name LIKE 'art garfunkel'
+  );
