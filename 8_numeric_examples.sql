@@ -100,7 +100,7 @@ SELECT
    WHERE
      question = 'Q01'
      AND subject = '(8) Computer Science'
-     AND ny.institution = nx.institution)
+     AND ny.institution = nx.institution) AS cs_students
 FROM nss AS nx
 WHERE
   question = 'Q01'
